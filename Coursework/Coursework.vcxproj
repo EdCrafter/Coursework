@@ -131,9 +131,14 @@
     <ClInclude Include="AeroProperties.h" />
     <ClInclude Include="AeroPropertiesBase.h" />
     <ClInclude Include="aircraft.h" />
+    <ClInclude Include="Array.h" />
     <ClInclude Include="atmosphere.h" />
     <ClInclude Include="base.h" />
     <ClInclude Include="AircraftBase.h" />
+    <ClInclude Include="fun_console.h" />
+    <ClInclude Include="programRunner.h" />
+    <ClInclude Include="String.h" />
+    <ClInclude Include="Window.h" />
     <ClInclude Include="wing.h" />
     <ClInclude Include="WingBase.h" />
   </ItemGroup>
@@ -141,6 +146,7 @@
     <ClCompile Include="AeroPropertiesBase.cpp" />
     <ClCompile Include="AircraftBase.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="String.cpp" />
     <ClCompile Include="WingBase.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

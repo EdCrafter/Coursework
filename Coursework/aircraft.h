@@ -118,13 +118,13 @@ namespace Aerodynamics {
 			double getL() {
 				return l;
 			}
-			Wing& getWing() {
+			Wing getWing() {
 				return wing.dataF;
 			}
-			string &getName() {
+			string getName() {
 				return name;
 			}
-			WingBase::Object& getWingObject() {
+			WingBase::Object getWingObject() {
 				return wing;
 			}
 			AeroPropertiesBase::Object getAPObject() {
