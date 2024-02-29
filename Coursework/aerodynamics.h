@@ -1,5 +1,4 @@
 #include <stdexcept>
-#include <iostream>
 using namespace std;
 #ifndef AERODYNAMICS_HPP
 #define AERODYNAMICS_HPP
@@ -65,9 +64,9 @@ namespace Aerodynamics {
 13.20 - 14.18
 14.39 - 15.15
 15.35 - 15.50
-8.55 - 10.00
+8.55  - 10.00
 13.20 - 14.50
-21.40 - 
-
+21.40 - 22.13
+9.20  - 
 
 */

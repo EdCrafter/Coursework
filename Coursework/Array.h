@@ -1,4 +1,4 @@
-#include "aerodynamics.h"
+
 #pragma once
 namespace Aerodynamics {
 	namespace Data {

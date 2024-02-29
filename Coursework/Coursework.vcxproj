@@ -145,8 +145,10 @@
   <ItemGroup>
     <ClCompile Include="AeroPropertiesBase.cpp" />
     <ClCompile Include="AircraftBase.cpp" />
+    <ClCompile Include="funConsole.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="String.cpp" />
+    <ClCompile Include="Window.cpp" />
     <ClCompile Include="WingBase.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

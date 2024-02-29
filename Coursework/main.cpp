@@ -3,7 +3,9 @@
 int main() {
 	
 	
-	
+	ProgramRunner mainP;
+	mainP.start();
+
 
 	return 0;
 }

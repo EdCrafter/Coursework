@@ -1,6 +1,4 @@
 #pragma once
-#pragma once
-#include "aerodynamics.h"
 #include <conio.h>
 #include "String.h"
 #include "Array.h"
@@ -44,17 +42,10 @@ namespace Aerodynamics {
 
 		class Message : public Window {
 		protected:
-			String text;
+			Aerodynamics::Data::String text;
 		public:
-			Message(String t) :text(t) {}
+			Message(Aerodynamics::Data::String t) :text(t) {}
 			void Draw() { std::cout << text; _getch(); }
-			/*
-			Message & Show() {
-				Window::Show();
-				std::cout << text; _getch();
-				return *this;
-			}
-			*/
 		};
 
 
@@ -86,7 +77,7 @@ namespace Aerodynamics {
 
 		class ArrayMenu : public Menu {
 		protected:
-			Array<String> items;
+			Aerodynamics::Data::Array<Aerodynamics::Data::String> items;
 			unsigned int heightRow;
 		public:
 			ArrayMenu() : Menu(), heightRow(1) {
@@ -127,7 +118,7 @@ namespace Aerodynamics {
 				buf[1] = 185;
 				this->title = title;
 				if (addExit) {
-					addItem("Exit", []() { ::SetColor(White, Black); cls();  });
+					addItem("Вихiд", []() { funConsole::SetColor(White, Black); funConsole::cls();  });
 				}
 			};
 			FunctionMenu& SetHeight(int h) {
@@ -149,21 +140,21 @@ namespace Aerodynamics {
 			int Select();
 			FunctionMenu& Show() {
 				Window::Show();
-				::SetColor(borderColor, bgColor);
-				GotoXY(x, y - 2);
+				funConsole::SetColor(borderColor, bgColor);
+				funConsole::GotoXY(x, y - 2);
 				std::cout << Window::buf[0];
 				for (int j = 0; j < width - 2; j++) {
 					std::cout << Window::buf[1];
 				}
 				std::cout << Window::buf[2];
-				GotoXY(x, y - 1);
+				funConsole::GotoXY(x, y - 1);
 				std::cout << Window::buf[3];
 
-				GotoXY(x + width - 1, y - 1);
+				funConsole::GotoXY(x + width - 1, y - 1);
 				std::cout << Window::buf[3];
-				GotoXY(x, y);
+				funConsole::GotoXY(x, y);
 				std::cout << buf[0];
-				GotoXY(x + width - 1, y);
+				funConsole::GotoXY(x + width - 1, y);
 				std::cout << buf[1];
 				return *this;
 			};
@@ -180,7 +171,7 @@ namespace Aerodynamics {
 
 			void DrawItem(int row, int index) {
 				if (index == active) Write(0, row, ">");
-				::SetColor(index, index);
+				funConsole::SetColor(index, index);
 				for (int i = 1; i < GetClientWidth(); i++) {
 					Write(i, row, " ");
 				}

@@ -1,49 +1,50 @@
 #pragma once
-#include "aerodynamics.h"
-#include "AeroPropertiesBase.h"
-#include "WingBase.h"
 #include "AircraftBase.h"
 #include "Window.h"
 using namespace Aerodynamics::UI;
 class ProgramRunner
 {
+	
 	Aerodynamics::Data::AircraftBase aircB;
 	Aerodynamics::Data::WingBase wingB;
 	Aerodynamics::Data::AeroPropertiesBase apB;
 public:
 	ProgramRunner() = default;
 	ProgramRunner& start() {
-		setlocale(0, ".1251");
+		setlocale(0, "en");
 		FunctionMenu myInterface("ГОЛОВНЕ МЕНЮ", 1);
-		myInterface.SetHeight(5).SetWidth(20).HCenter().VCenter();
-		myInterface.addItem("1", [this, &myInterface]() {
-			if (1) {
-				::SetColor(White, Black);
-				cls();
-				Window w;
-				w.SetWidth(20).SetHeight(3).SetColor(Green).SetBgColor(Yellow).VCenter().HCenter();
-				w.Show();
-				w.Write(0, 0, "User created");
-			}
+		myInterface.SetHeight(9).SetWidth(30).HCenter().VCenter();
+		myInterface.addItem("Додати повiтряне судно", [this, &myInterface]() {
 			_getch();
-			::SetColor(White, Black);
-			cls();
+			funConsole::clearScr();
+			myInterface.Select();
+			});		
+		myInterface.addItem("Таблиця повiтряних суден", [this, &myInterface]() {
+			_getch();
+			funConsole::clearScr();
 			myInterface.Select();
 			});
-		myInterface.addItem("Підівюйї", [this, &myInterface]() {
-			if (1) {
-				::SetColor(White, Black);
-				cls();
-				Window w;
-				w.SetWidth(30).SetHeight(3).SetColor(Green).SetBgColor(Yellow).VCenter().HCenter();
-				w.Show();
-				w.Write(0, 0, "Error user name or password");
-				_getch();
-			}
-			::SetColor(White, Black);
-			cls();
+		myInterface.addItem("Сортувати таблицю", [this, &myInterface]() {
+			_getch();
+			funConsole::clearScr();
 			myInterface.Select();
 			});
+		myInterface.addItem("Меню Крил", [this, &myInterface]() {
+			_getch();
+			funConsole::clearScr();
+			myInterface.Select();
+			});
+		myInterface.addItem("Видалити повiтряне судно", [this, &myInterface]() {
+			_getch();
+			funConsole::clearScr();
+			myInterface.Select();
+			});
+		myInterface.addItem("Видалити всi суда", [this, &myInterface]() {
+			_getch();
+			funConsole::clearScr();
+			myInterface.Select();
+			});
+
 		myInterface.Select();
 		return *this;
 	}
