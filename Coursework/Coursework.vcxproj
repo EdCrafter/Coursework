@@ -136,7 +136,8 @@
     <ClInclude Include="base.h" />
     <ClInclude Include="AircraftBase.h" />
     <ClInclude Include="fun_console.h" />
-    <ClInclude Include="programRunner.h" />
+    <ClInclude Include="Input.h" />
+    <ClInclude Include="progMenu.h" />
     <ClInclude Include="String.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="wing.h" />
@@ -146,10 +147,15 @@
     <ClCompile Include="AeroPropertiesBase.cpp" />
     <ClCompile Include="AircraftBase.cpp" />
     <ClCompile Include="funConsole.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="progMenu.cpp" />
     <ClCompile Include="String.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WingBase.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

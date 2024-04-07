@@ -7,6 +7,9 @@ namespace Aerodynamics {
 		{
 			vector<AeroQuality> arK;
 		public:
+			AeroProperties() {
+				arK.reserve(10);
+			}
 			AeroProperties& add(double Cx, double Cy, double a) {
 				AeroQuality K(Cx, Cy, a);
 				arK.push_back(K);

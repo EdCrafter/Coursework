@@ -58,8 +58,8 @@ namespace Aerodynamics {
 		public:
 			Menu() : Window() {
 				active = -1;
-				selectColor = Blue;
-				selectBgColor = White;
+				selectColor = LightMagenta;
+				selectBgColor = LightGreen;
 			}
 			int GetSelect() { return active; }
 			virtual int Select();
@@ -114,6 +114,7 @@ namespace Aerodynamics {
 			const char* title;
 		public:
 			FunctionMenu(const char* title = "title", bool addExit = 0) {
+				items.reserve(10);
 				buf[0] = 204;
 				buf[1] = 185;
 				this->title = title;

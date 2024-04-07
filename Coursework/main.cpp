@@ -1,9 +1,10 @@
-#include "programRunner.h"
+#include "progMenu.h"
+using namespace Aerodynamics::UI;
 
 int main() {
 	
 	
-	ProgramRunner mainP;
+	progMenu mainP;
 	mainP.start();
 
 

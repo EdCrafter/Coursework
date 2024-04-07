@@ -10,7 +10,7 @@ namespace Aerodynamics {
 			x = y = 0;
 			width = funConsole::GetCols();
 			height = funConsole::GetRows();
-			SetBgColor(Blue);
+			SetBgColor(Black);
 			SetColor(White);
 			SetBorderColor(LightBlue);
 
