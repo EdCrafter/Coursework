@@ -2,6 +2,7 @@
 #include "AircraftBase.h"
 #include "Window.h"
 #include "Input.h"
+using namespace Aerodynamics::Data;
 namespace Aerodynamics{
 	namespace UI {
 		class progMenu
@@ -12,8 +13,10 @@ namespace Aerodynamics{
 		public:
 			progMenu() = default;
 			progMenu& start();
-			progMenu& wingMenu();
-			progMenu& aircraftMenu();
+			progMenu& wingsMenu();
+			progMenu& aircraftsMenu();
+			progMenu& wingMenu(Wing wing);
+			progMenu& aircraftMenu(Aircraft& airc);
 		};
 	}
 }

@@ -37,6 +37,23 @@ namespace Aerodynamics {
             Y=Cy* density* v* v / 2 * S;
             return Y;
         }
+        static int length(int a) {
+			int l = 0;
+            while (a > 0) {
+				a /= 10;
+				l++;
+			}
+			return l;
+		}
+        static int length(double a,unsigned int n=0) {
+            int l = 0;
+            n = 1 / n+1;
+            while (a > n) {
+                a /= 10;
+                l++;
+            }
+            return l;
+        }
     }
     namespace Data {
         

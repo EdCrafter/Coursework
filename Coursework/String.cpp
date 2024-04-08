@@ -127,6 +127,43 @@ namespace Aerodynamics {
 			return false;
 		}
 
+		int String::atoi()
+		{
+			int res = 0;
+			for (int i = 0; this->str[i]; i++) {
+				char s = this->str[i];
+				if (s >= '0' && s <= '9') {
+					res = res * 10 + s - '0';
+				}
+			}
+			return res;
+		}
+
+		double String::atof()
+		{
+			double res = 0;
+			int i = 0;
+			for (; this->str[i]; i++) {
+				char s = this->str[i];
+				if (s >= '0' && s <= '9') {
+					res = res * 10 + s - '0';
+				}
+				else if (s == '.') {
+					i++;
+					break;
+				}
+			}
+			double dec = 0.1;
+			for (; this->str[i]; i++) {
+				char s = this->str[i];
+				if (s >= '0' && s <= '9') {
+					res += (s - '0') * dec;
+					dec /= 10;
+				}
+			}
+			return res;
+		}
+
 
 	}
 }

@@ -2,6 +2,8 @@
 #include "aerodynamics.h"
 #include <list>
 #include <fstream>
+#include <conio.h>
+#include <iostream>
 
 namespace Aerodynamics {
 	namespace Data {
@@ -112,6 +114,10 @@ namespace Aerodynamics {
 				}
 				throw range_error("Error id");
 			}
+			std::list<Object>& getObjects() {
+				return dataFs;
+			}
+
 		};
 
 		

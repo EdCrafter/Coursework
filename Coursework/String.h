@@ -1,4 +1,4 @@
-
+#pragma disable(warning:4996)
 #pragma once
 #include <string.h>
 #include <iostream>
@@ -13,18 +13,24 @@ namespace Aerodynamics {
 			String(const String& s) { str = 0; add(s.str); }
 			String(const char* s = 0) { str = 0; add(s); }
 			String(char c, size_t len);
+			String(double d) { 
+				str = 0;
+				int l = Aerodynamics::Analytics::length(d);
+				char *s = new char[l + 1];
+				sprintf_s(s,sizeof(s), "%f", d); add(s); }
 			~String() { empty(); }
 			const char* get() { return (str) ? str : ""; }
 			size_t length() { return strlen(get()); }
 			String& empty() { delete str; str = 0; return *this; }
 
 			String& add(const char* s);
+			String& add(string& s);
 			String& add(String& s) { return add(s.str); }
 
 			String& operator = (String& s) { empty();  return add(s.str); }
 			String& operator = (const String& s) { empty();  return add(s.str); }
 			String& operator = (const char* s) { empty();  return add(s); }
-
+			
 			String& operator += (String& s) { return add(s.str); }
 			String& operator += (const char* s) { return add(s); }
 
@@ -71,6 +77,8 @@ namespace Aerodynamics {
 				return *this;
 			}
 			bool hasCapitalLetter();
+			int atoi();
+			double atof();
 		};
 	}
 };
