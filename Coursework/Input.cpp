@@ -8,6 +8,7 @@ using namespace Aerodynamics::UI::funConsole;
 		int onceDot = 0;
 		int onceE = 0;
 		int oncePlus = 0;
+		int twoMinus = 0;
 
 		bool modeContinue;
 		while (k < lengthMax) {

@@ -10,6 +10,12 @@ namespace Aerodynamics {
 			AeroProperties() {
 				arK.reserve(10);
 			}
+			AeroProperties(double Cx, double Cy, double a) {
+				arK.reserve(10);
+				AeroQuality K(Cx, Cy, a);
+				arK.push_back(K);
+			}
+
 			AeroProperties& add(double Cx, double Cy, double a) {
 				AeroQuality K(Cx, Cy, a);
 				arK.push_back(K);
@@ -109,6 +115,9 @@ namespace Aerodynamics {
 					int count = arK.size();
 					short iterM = 0;
 					while (1) {
+						/*cout<<e<<endl;
+						cout<<arK[e].a<<" "<<angle<<"\n";
+						_getch();*/
 						if (arK[e].a > angle) {
 							e /= 2;
 							iterM = 0;

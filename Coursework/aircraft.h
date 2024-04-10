@@ -15,14 +15,15 @@ namespace Aerodynamics {
 			string name;
 		public:
 			Aircraft(string name = "Aircraft",double l = 0, double D = 0, double X = 0, double Y = 0, double G = 0) : name(name), l(l), D(D), X(X), Y(Y), G(G) {
-				if (l >= 0) {
-					x = l / 2;
-				}
-				else {
+				x = 0.5;
+				if (l < 0){
 					throw logic_error("Aircraft len must be more than 0");
 				}
 			}
 			Aircraft& evalAlignment(double distance ,  double cargoG, double G = 0, bool tail = true , double MAC = 0,double _x = 0.5) {
+				if (!G) {
+					G = (this->G)/Aerodynamics::Analytics::AtmosphereConstants::g;
+				}
 				if (!MAC) {
 					MAC = wing.dataF.getMAC();
 				}
@@ -94,6 +95,26 @@ namespace Aerodynamics {
 				else {
 					throw logic_error("Aircraft len must be more than 0");
 				}
+				return *this;
+			}
+			Aircraft& setD(double D) {
+				this->D = D;
+				return *this;
+			}
+			Aircraft& setX(double X) {
+				this->X = X;
+				return *this;
+			}
+			Aircraft& setY(double Y) {
+				this->Y = Y;
+				return *this;
+			}
+			Aircraft& setG(double G) {
+				this->G = G;
+				return *this;
+			}
+			Aircraft& setName(string name) {
+				this->name = name;
 				return *this;
 			}
 			bool operator == (Aircraft& airc) {

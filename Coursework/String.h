@@ -1,4 +1,4 @@
-#pragma disable(warning:4996)
+
 #pragma once
 #include <string.h>
 #include <iostream>
@@ -13,11 +13,23 @@ namespace Aerodynamics {
 			String(const String& s) { str = 0; add(s.str); }
 			String(const char* s = 0) { str = 0; add(s); }
 			String(char c, size_t len);
-			String(double d) { 
+			String(int i) { 
+				str = 0; 
+				int l = Aerodynamics::Analytics::length(i);
+				char* s = new char[l + 1];
+				sprintf_s(s, l + 1, "%d", i);
+				add(s);
+			}
+			String(double d,unsigned int n =0) { 
 				str = 0;
-				int l = Aerodynamics::Analytics::length(d);
-				char *s = new char[l + 1];
-				sprintf_s(s,sizeof(s), "%f", d); add(s); }
+
+				int l = Aerodynamics::Analytics::length(d,n);
+				if (!n)  l -= 1;
+				char *s = new char[l + n+2];
+				String format = (String)"%."+String((int)n)+"lf";
+				sprintf_s(s,l+n+2,format.get(), d);
+				add(s); 
+			}
 			~String() { empty(); }
 			const char* get() { return (str) ? str : ""; }
 			size_t length() { return strlen(get()); }
@@ -26,7 +38,7 @@ namespace Aerodynamics {
 			String& add(const char* s);
 			String& add(string& s);
 			String& add(String& s) { return add(s.str); }
-
+			String& set(String& s) { empty(); return add(s.str); }
 			String& operator = (String& s) { empty();  return add(s.str); }
 			String& operator = (const String& s) { empty();  return add(s.str); }
 			String& operator = (const char* s) { empty();  return add(s); }
@@ -79,6 +91,15 @@ namespace Aerodynamics {
 			bool hasCapitalLetter();
 			int atoi();
 			double atof();
+			String& setSize(size_t len) {
+				size_t l = length();
+				if((l+len)%2) add(" ");
+				String s = String(' ', (len - l) / 2);
+				add(s);
+				s.add(str);
+				set(s);
+				return *this;
+			}
 		};
 	}
 };

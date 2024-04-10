@@ -31,6 +31,7 @@ namespace Aerodynamics {
             const double MESOSPHERE_DENSITY = 0.01;   // êã/ì^3
             const double THERMOSPHERE_DENSITY = 0.00001;   // êã/ì^3
             const double EXOSPHERE_DENSITY = 0.0000001;
+            const double g = 9.81;
         }
         static double evalY(double Cy, double density,double v,double S) {
             double Y;
@@ -38,6 +39,7 @@ namespace Aerodynamics {
             return Y;
         }
         static int length(int a) {
+            if (!a) return 1;
 			int l = 0;
             while (a > 0) {
 				a /= 10;
@@ -46,9 +48,11 @@ namespace Aerodynamics {
 			return l;
 		}
         static int length(double a,unsigned int n=0) {
+            if (!a) return 1;
             int l = 0;
-            n = 1 / n+1;
-            while (a > n) {
+            if (n) l = 1;
+            double d = 1. / ((n+1)*10);
+            while (a > d) {
                 a /= 10;
                 l++;
             }
@@ -84,6 +88,6 @@ namespace Aerodynamics {
 8.55  - 10.00
 13.20 - 14.50
 21.40 - 22.13
-9.20  - 
+8h
 
 */

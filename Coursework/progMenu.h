@@ -16,7 +16,7 @@ namespace Aerodynamics{
 			progMenu& wingsMenu();
 			progMenu& aircraftsMenu();
 			progMenu& wingMenu(Wing wing);
-			progMenu& aircraftMenu(Aircraft& airc);
+			progMenu& aircraftMenu(Aircraft& airc, unsigned int j);
 		};
 	}
 }
