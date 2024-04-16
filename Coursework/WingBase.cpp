@@ -7,7 +7,7 @@ namespace Aerodynamics {
 		{
 			if (!(*this).size()) return false;
 			fstream fileP;
-			fileP.open(file, ios::out);
+			fileP.open(file, ios::binary|ios::out);
 			typename std::list<Object>::iterator i;
 			if (format == txt) {
 				for (i = dataFs.begin(); i != dataFs.end(); i++) {
@@ -46,7 +46,7 @@ namespace Aerodynamics {
 			double MAC,l, S;
 			unsigned int apId;
 			fstream fileP;
-			fileP.open(file, ios::in);
+			fileP.open(file, ios::binary|ios::in);
 
 			if (!fileP) return *this;
 

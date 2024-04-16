@@ -49,8 +49,9 @@ using namespace Aerodynamics::UI::funConsole;
 			switch (mode)
 			{
 			case 1:
-				if (!((key >= '0' && key <= '9') || key == '.' || 
-					(key == 'e' && k>0) || (key == '+' && k>1 && str[k-1]=='e'))) {
+				if (!((key >= '0' && key <= '9') || (key == '.' && k) || 
+					(key == 'e' && k>0) || (key == '+' && k>1 && str[k-1]=='e') 
+					|| (key == '-' && k > 1 && str[k - 1] == 'e') || (!k && key=='-'))) {
 					continue;
 				}
 				if (key >= '0' && key <= '9' && k>0 && str[k - 1] == 'e') {

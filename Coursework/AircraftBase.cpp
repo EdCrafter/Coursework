@@ -7,7 +7,11 @@ namespace Aerodynamics {
 		{
 			if (!(*this).size()) return false;
 			fstream fileP;
-			fileP.open(file, ios::out);
+			if (!fileP) {
+				throw exception("File not found");
+
+			}
+			fileP.open(file, ios::binary|ios::out);
 			typename std::list<Object>::iterator i;
 			if (format == txt) {
 				for (i = dataFs.begin(); i != dataFs.end(); i++) {
@@ -48,7 +52,7 @@ namespace Aerodynamics {
 			double D, X, Y, G,x, l, vMin;
 			unsigned int wingId, apId;
 			fstream fileP;
-			fileP.open(file, ios::in);
+			fileP.open(file, ios::binary|ios::in);
 
 			if (!fileP) return *this;
 

@@ -359,16 +359,34 @@ progMenu& Aerodynamics::UI::progMenu::aircraftMenu(Aircraft& airc,unsigned int j
 			});
 		centerMenu.addItem("Обчислити центрування", [this, &centerMenu, &airc]() {
 			funConsole::clearScr();
-			double distance=0;
-			double weight = airc.getG()/Aerodynamics::Analytics::AtmosphereConstants::g;
-			double _x = airc.getAlignment()*100;
-			double cargoG = 0;
-			funConsole::clearScr();
-			cout <<"w="<< & cargoG << "\n";
-			_getch();
+			double distance = 0;
+			double weight = airc.getG() / Aerodynamics::Analytics::AtmosphereConstants::g;
+			double _x = airc.getAlignment() ;
+			double cargoG = 1;
+			double MAC = 1;
+			bool tail = true;
+			if (this->wingB.size() != 0) {
+				MAC = airc.getWing().getMAC();
+			}
+			
 			FunctionMenu calcMenu("ОбЧИСЛЕННЯ ЦЕНТРУВАННЯ", 1);
-			calcMenu.SetHeight(9).SetWidth(50).HCenter().VCenter();
-			calcMenu.addItem((String)"Вага вантажу:"+String(cargoG), [&calcMenu, &airc, &cargoG]() {
+			calcMenu.SetHeight(11).SetWidth(50).HCenter().VCenter();
+			calcMenu.addItem("Показати вхiднi данi", [&calcMenu, &airc, &distance, &cargoG, &_x,&weight,&MAC,&tail]() {
+				funConsole::clearScr();
+				Window win;
+				win.SetWidth(40).SetHeight(8).VCenter().HCenter();
+				win.Show();
+				win.Write(0, 0, (String)"Вага вантажу(кг)     :" + String(cargoG));
+				win.Write(0, 1, (String)"Вiдстань(м)          :" + String(distance));
+				win.Write(0, 2, (String)"Центрування початкове:" + String(_x * 100, 2) + "%");
+				win.Write(0, 3, (String)"Вага судна(кг)       :" + String(weight));
+				win.Write(0, 4, (String)"САХ(хорда м)         :" + String(MAC));
+				win.Write(0, 5, (String)"Куди    :" + ((tail)?String("До носової частини"):String("До хвостової частини")));
+				_getch();
+				funConsole::clearScr();
+				calcMenu.Select();
+				});
+			calcMenu.addItem("Змiнити вагу вантажу", [&calcMenu, &airc, &cargoG]() {
 				funConsole::clearScr();
 				Window win;
 				win.SetWidth(40).SetHeight(4).VCenter().HCenter();
@@ -376,26 +394,36 @@ progMenu& Aerodynamics::UI::progMenu::aircraftMenu(Aircraft& airc,unsigned int j
 				win.Write(0, 0, "Введiть вагу вантажу(кг):");
 				InputV2 in(6, win.GetX() + 26, win.GetY() + 1);
 				in.process(1);
-				funConsole::clearScr();
-				cout << &cargoG << "\n";
-				_getch();
 				cargoG = ((String)in.get()).atoi();
 				funConsole::clearScr();
 				calcMenu.Select();
 				});
-			calcMenu.addItem((String)"Перемiстити на вiдстань : " + String(distance), [&calcMenu, &airc, &distance]() {
+			calcMenu.addItem("Змiнити вагу судна", [&calcMenu, &airc, &weight]() {
+				funConsole::clearScr();
+				Window win;
+				win.SetWidth(40).SetHeight(4).VCenter().HCenter();
+				win.Show();
+				win.Write(0, 0, "Введiть вагу вантажу(кг):");
+				InputV2 in(6, win.GetX() + 26, win.GetY() + 1);
+				in.process(1);
+				weight = ((String)in.get()).atoi();
+				airc.setG(weight * Aerodynamics::Analytics::AtmosphereConstants::g);
+				funConsole::clearScr();
+				calcMenu.Select();
+				});
+			calcMenu.addItem("Перемiстити на вiдстань", [&calcMenu, &airc, &distance]() {
 				funConsole::clearScr();
 				Window win;
 				win.SetWidth(40).SetHeight(4).VCenter().HCenter();
 				win.Show();
 				win.Write(0, 0, "Введiть вiдстань(м):");
 				InputV2 in(6, win.GetX() + 21, win.GetY() + 1);
-				in.process(3, 0);
+				in.process(1, 0);
 				distance = ((String)in.get()).atoi();
 				funConsole::clearScr();
 				calcMenu.Select();
-				});	
-			calcMenu.addItem((String)"Центрування : " + String(_x,2)+(String)"%", [&calcMenu, &airc, &_x]() {
+				});
+			calcMenu.addItem("Змiнити початкове центрування", [&calcMenu, &airc, &_x]() {
 				funConsole::clearScr();
 				Window win;
 				win.SetWidth(40).SetHeight(4).VCenter().HCenter();
@@ -407,8 +435,41 @@ progMenu& Aerodynamics::UI::progMenu::aircraftMenu(Aircraft& airc,unsigned int j
 				funConsole::clearScr();
 				calcMenu.Select();
 				});
-			calcMenu.addItem("Обчислити", [& calcMenu, &airc, &distance]() {});
+			calcMenu.addItem("Змiнити САХ", [&calcMenu, &airc, &MAC]() {
+				funConsole::clearScr();
+				Window win;
+				win.SetWidth(40).SetHeight(4).VCenter().HCenter();
+				win.Show();
+				win.Write(0, 0, "Введiть САХ(м):");
+				InputV2 in(6, win.GetX() + 16, win.GetY() + 1);
+				in.process(1, 0);
+				MAC = ((String)in.get()).atoi();
+				funConsole::clearScr();
+				calcMenu.Select();
+			});
+			calcMenu.addItem("Куди перемiстити", [&calcMenu, &airc, &tail]() {
+				funConsole::clearScr();
+				Window win;
+				win.SetWidth(40).SetHeight(4).VCenter().HCenter();
+				win.Show();
+				win.Write(0, 0, "Куди перемiстити(1/0):");
+				InputV2 in(1, win.GetX() + 23, win.GetY() + 1);
+				in.process(1, 0);
+				tail = ((String)in.get()).atoi();
+				funConsole::clearScr();
+				calcMenu.Select();
+				});
+			calcMenu.addItem("Обчислити", [&calcMenu, &airc, &distance,&tail,&cargoG,&weight,&MAC,&_x]() {
+				funConsole::clearScr();
+				airc.evalAlignment(distance, cargoG, weight, tail, MAC, _x);
+				Window win;
+				win.SetWidth(40).SetHeight(4).VCenter().HCenter();
+				win.Show();
+				win.Write(0, 0, (String)"Нове центрування(%):" + String(airc.getAlignment() * 100, 2));
+				_getch();
+				});
 			calcMenu.Select();
+
 			funConsole::clearScr();
 			centerMenu.Select();
 			});

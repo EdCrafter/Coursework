@@ -67,10 +67,17 @@ namespace Aerodynamics {
 			double getK(double angle) {
 				return ap.dataF.getK(angle);
 			}
-			double Vmin(double CyMax, double density, double G, double S) {
-				double v;
-				v = sqrt(2 * G / (CyMax * density * S));
-				return v;
+			double evalVMin(double CyMax=0, double density=0, double G=0, double S=1) {
+				if (!CyMax && ap.id+1) {
+					CyMax = ap.dataF.getCyMax();
+				}
+				if (!density) {
+					density = Aerodynamics::Analytics::AtmosphereConstants::TROPOSPHERE_DENSITY;
+				}
+				if (!G) {
+					G = this->G/ Aerodynamics::Analytics::AtmosphereConstants::g;
+				}
+				vMin = sqrt(2 * G / (CyMax * density * S));
 			}
 			bool uniformMove(double eps = 10000) {
 
@@ -140,7 +147,7 @@ namespace Aerodynamics {
 			double getL() {
 				return l;
 			}
-			Wing getWing() {
+			Wing& getWing() {
 				return wing.dataF;
 			}
 			string getName() {

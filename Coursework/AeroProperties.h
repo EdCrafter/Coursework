@@ -192,6 +192,18 @@ namespace Aerodynamics {
 				arK = _arK;
 				return *this;
 			}
+			double getA(int i) {
+				return arK[i].a;
+			}
+			double getCyMax() {
+				double max = -1000;
+				for (int i = 0; i < arK.size(); i++) {
+					if (arK[i].Cy > max) {
+						max = arK[i].Cy;
+					}
+				}
+				return max;
+			}
 		};
 	}
 }

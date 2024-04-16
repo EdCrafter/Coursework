@@ -141,6 +141,8 @@ namespace Aerodynamics {
 
 		double String::atof()
 		{
+			bool e = 0;
+			bool sign = 0;
 			double res = 0;
 			int i = 0;
 			for (; this->str[i]; i++) {
@@ -148,17 +150,49 @@ namespace Aerodynamics {
 				if (s >= '0' && s <= '9') {
 					res = res * 10 + s - '0';
 				}
-				else if (s == '.') {
+				else if (s == '.' || s==',') {
+					i++;
+					break;
+				}
+				else if (s == 'e')
+				{
+					e = 1;
 					i++;
 					break;
 				}
 			}
 			double dec = 0.1;
-			for (; this->str[i]; i++) {
+			for (; this->str[i] && !e; i++) {
 				char s = this->str[i];
 				if (s >= '0' && s <= '9') {
 					res += (s - '0') * dec;
 					dec /= 10;
+				}
+				if (s == 'e') {
+					e = 1;
+					i++;
+					break;
+				}
+			}
+			if (e) {
+				int exp = 0;
+				for (; this->str[i]; i++) {
+					char s = this->str[i];
+					if (s == '+') {
+						sign = 0;
+					}
+					else if (s == '-') {
+						sign = 1;
+					}
+					else if (s >= '0' && s <= '9') {
+						exp = exp * 10 + s - '0';
+					}
+				}
+				if (sign) {
+					res /= pow(10, exp);
+				}
+				else {
+					res *= pow(10, exp);
 				}
 			}
 			return res;

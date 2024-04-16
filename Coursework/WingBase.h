@@ -7,6 +7,7 @@ namespace Aerodynamics {
 		{
 			Aerodynamics::Data::Type t; int sizeM;
 		public:
+			
 			WingBase(unsigned int id = 0) : base<Aerodynamics::Data::Wing>(id) {}
 			WingBase& read(char* file, AeroPropertiesBase* apb);
 			bool save(char* file, Aerodynamics::Data::Format format = Aerodynamics::Data::Format::txt);

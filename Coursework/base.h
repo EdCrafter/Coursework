@@ -25,7 +25,9 @@ namespace Aerodynamics {
 			struct Object {
 				unsigned int id;
 				T dataF;
-				Object() = default;
+				Object() {
+					id = -1;
+				}
 				Object(unsigned int id, T dataF) : id(id), dataF(dataF) {}
 			};
 
