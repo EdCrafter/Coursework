@@ -27,7 +27,7 @@ namespace Aerodynamics {
 				if (!MAC) {
 					MAC = wing.dataF.getMAC();
 				}
-				x = (_x+pow(-1,(!tail))*(cargoG* distance /(G+cargoG))) / MAC;
+				x = (_x* MAC+pow(-1,tail)*(cargoG* distance /(G+cargoG))) / MAC;
 				return *this;
 			}
 			Aircraft& setAlignment(double x) {
@@ -67,16 +67,20 @@ namespace Aerodynamics {
 			double getK(double angle) {
 				return ap.dataF.getK(angle);
 			}
-			double evalVMin(double CyMax=0, double density=0, double G=0, double S=1) {
-				if (!CyMax && ap.id+1) {
+			double evalVMin(double CyMax=1, double density=1, double G=0, double S=1) {
+				if (!(CyMax-1) && ap.id+1) {
 					CyMax = ap.dataF.getCyMax();
 				}
-				if (!density) {
+				if (!(density-1)) {
 					density = Aerodynamics::Analytics::AtmosphereConstants::TROPOSPHERE_DENSITY;
 				}
 				if (!G) {
-					G = this->G/ Aerodynamics::Analytics::AtmosphereConstants::g;
+					G = this->G;
 				}
+				if (!(S-1) && wing.id+1) {
+					S = wing.dataF.getS();
+				}
+
 				vMin = sqrt(2 * G / (CyMax * density * S));
 			}
 			bool uniformMove(double eps = 10000) {
@@ -158,6 +162,21 @@ namespace Aerodynamics {
 			}
 			AeroPropertiesBase::Object getAPObject() {
 				return ap;
+			}
+			double evalY (double Cy = 0, double density = 0, double G = 1, double S = 0) {
+				if (!Cy && ap.id+1) {
+					Cy = ap.dataF.getCyMax();
+				}
+				if (!density) {
+					density = Aerodynamics::Analytics::AtmosphereConstants::TROPOSPHERE_DENSITY;
+				}
+				if (!G) {
+					G = this->G;
+				}
+				if (!S && wing.id+1) {
+					S = wing.dataF.getS();
+				}
+				Y = Cy * density * S * vMin * vMin / 2;
 			}
 		};
 	}

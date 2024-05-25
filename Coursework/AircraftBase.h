@@ -2,6 +2,7 @@
 #include "base.h"
 #include "aircraft.h"
 #include "wing.h"
+#include "AeroProperties.h"
 namespace Aerodynamics {
 	namespace Data {
 	

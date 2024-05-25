@@ -29,6 +29,9 @@ namespace Aerodynamics {
 			string getName() {
 				return name;
 			}
+			Analytics::AeroProperties& getAeroProperties() {
+				return ap.dataF;
+			}
 			AeroPropertiesBase::Object getAeroPropertiesObj() {
 				return ap;
 			}
@@ -67,6 +70,28 @@ namespace Aerodynamics {
 				S = w.S;
 
 				return* this;
+			}
+			Wing& setL(double _l) {
+				if (_l > 0) {
+					l = _l;
+				}
+				else {
+					throw logic_error("The length must be more than zero");
+				}
+				return *this;
+			}
+			Wing& setS(double _S) {
+				if (_S > 0) {
+					S = _S;
+				}
+				else {
+					throw logic_error("The area must be more than zero");
+				}
+				return *this;
+			}
+			Wing& setName(string _name) {
+				name = _name;
+				return *this;
 			}
 		};
 	}

@@ -4,6 +4,7 @@
 #include <fstream>
 #include <conio.h>
 #include <iostream>
+#include "String.h"
 
 namespace Aerodynamics {
 	namespace Data {

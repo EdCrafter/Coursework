@@ -10,12 +10,31 @@ namespace Aerodynamics {
 			fstream fileP;
 			fileP.open(file, ios::binary|ios::out);
 			typename std::list<Object>::iterator i;
+			String folder = "AeroPropertiesBases";
 			if (format == txt) {
+				String subfolder = "txt";
+				String fullPath = folder + "/" + subfolder + "/" + file;
+#ifdef _WIN32
+				std::system(("mkdir " + folder).get());
+				std::system(("mkdir " + folder + "\\" + subfolder).get());
+#else
+				std::system(("mkdir -p " + folder + "/" + subfolder).c_str());
+#endif
+				fileP.open(fullPath.get(), ios::binary | ios::out);
 				for (i = dataFs.begin(); i != dataFs.end(); i++) {
 					fileP << i->id << " " << i->dataF.getVectorAK()<< "\n";
 				}
 			}
 			else if (format == html) {
+				String subfolder = "HTML";
+				String fullPath = folder + "/" + subfolder + "/" + file;
+#ifdef _WIN32
+				std::system(("mkdir " + folder).get());
+				std::system(("mkdir " + folder + "\\" + subfolder).get());
+#else
+				std::system(("mkdir -p " + folder + "/" + subfolder).c_str());
+#endif
+				fileP.open(fullPath.get(), ios::binary | ios::out);
 				fileP << "<!DOCTYPE html><html lang = \"en\" ><head><meta charset = \"UTF-8\"><meta name = \"viewport\" content = \"width=device-width, initial-scale=1.0\"><title>Aircraft Base</title>";
 				fileP << "<style>table {font - family: Arial, sans - serif;border - collapse: collapse;width: 100 %;}th, td{ border: 1px solid #dddddd;";
 				fileP << "text - align: left;padding: 8px;}th{background - color: #f2f2f2;}tr:nth - child(even) {background - color: #f2f2f2;}</style></head><body>";
