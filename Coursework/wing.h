@@ -47,7 +47,8 @@ namespace Aerodynamics {
 				}
 				return *this;
 			}
-			Wing& setAeroProperties(Analytics::AeroProperties _ap) {
+			Wing& setAeroProperties(Analytics::AeroProperties _ap , unsigned int _id) {
+				ap.id = _id;
 				ap.dataF = _ap;
 				return *this;
 			}
@@ -56,7 +57,7 @@ namespace Aerodynamics {
 				return *this;
 			}
 			bool operator ==  (Wing& w){
-				if (w.ap.dataF == this->ap.dataF && w.MAC == this->MAC && w.l == this->l && w.S == this->S) {
+				if (w.ap.id == this->ap.id && w.MAC == this->MAC && w.l == this->l && w.S == this->S) {
 					return true;
 				}
 		

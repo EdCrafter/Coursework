@@ -16,6 +16,7 @@ namespace Aerodynamics {
 		public:
 			Aircraft(string name = "Aircraft",double l = 0, double D = 0, double X = 0, double Y = 0, double G = 0) : name(name), l(l), D(D), X(X), Y(Y), G(G) {
 				x = 0.5;
+				vMin = 0;
 				if (l < 0){
 					throw logic_error("Aircraft len must be more than 0");
 				}
@@ -53,8 +54,9 @@ namespace Aerodynamics {
 				vMin = _v;
 				return *this;
 			}
-			Aircraft& setAeroProperties(Analytics::AeroProperties _ap) {
+			Aircraft& setAeroProperties(Analytics::AeroProperties _ap,int id) {
 				ap.dataF = _ap;
+				ap.id = id;
 				return *this;
 			}
 			Aircraft& setAeroPropertiesID(unsigned int id , AeroPropertiesBase* apb) {
@@ -67,11 +69,11 @@ namespace Aerodynamics {
 			double getK(double angle) {
 				return ap.dataF.getK(angle);
 			}
-			double evalVMin(double CyMax=1, double density=1, double G=0, double S=1) {
+			double evalVMin(double CyMax=1, double density=0, double G=0, double S=1) {
 				if (!(CyMax-1) && ap.id+1) {
 					CyMax = ap.dataF.getCyMax();
 				}
-				if (!(density-1)) {
+				if (!(density)) {
 					density = Aerodynamics::Analytics::AtmosphereConstants::TROPOSPHERE_DENSITY;
 				}
 				if (!G) {
@@ -82,6 +84,7 @@ namespace Aerodynamics {
 				}
 
 				vMin = sqrt(2 * G / (CyMax * density * S));
+				return vMin;
 			}
 			bool uniformMove(double eps = 10000) {
 
@@ -91,7 +94,8 @@ namespace Aerodynamics {
 				return false;
 			}
 
-			Aircraft& setWing(Wing _wing) {
+			Aircraft& setWing(Wing _wing,unsigned int _id) {
+				wing.id = _id;
 				wing.dataF = _wing;
 				return *this;
 			}
@@ -163,20 +167,18 @@ namespace Aerodynamics {
 			AeroPropertiesBase::Object getAPObject() {
 				return ap;
 			}
-			double evalY (double Cy = 0, double density = 0, double G = 1, double S = 0) {
+			double evalY (double Cy = 0, double density = 0, double S = 0) {
 				if (!Cy && ap.id+1) {
 					Cy = ap.dataF.getCyMax();
 				}
 				if (!density) {
 					density = Aerodynamics::Analytics::AtmosphereConstants::TROPOSPHERE_DENSITY;
 				}
-				if (!G) {
-					G = this->G;
-				}
 				if (!S && wing.id+1) {
 					S = wing.dataF.getS();
 				}
 				Y = Cy * density * S * vMin * vMin / 2;
+				return Y;
 			}
 		};
 	}

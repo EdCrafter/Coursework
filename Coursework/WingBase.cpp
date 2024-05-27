@@ -7,32 +7,45 @@ namespace Aerodynamics {
 		{
 			if (!(*this).size()) return false;
 			fstream fileP;
-			fileP.open(file, ios::binary|ios::out);
-			typename std::list<Object>::iterator i;
+			if (!fileP) {
+				return false;
+			}
 			String folder = "WingBases";
+
+			int idAP;
+			typename std::list<Object>::iterator i;
 			if (format == txt) {
 				String subfolder = "txt";
-				String fullPath = folder + "/" + subfolder + "/" + file;
-#ifdef _WIN32
-				std::system(("mkdir " + folder).get());
-				std::system(("mkdir " + folder + "\\" + subfolder).get());
-#else
-				std::system(("mkdir -p " + folder + "/" + subfolder).c_str());
-#endif
+				String fullPath = folder + "/" + subfolder + "/" + file+".txt";
+				#ifdef _WIN32
+					if (!std::filesystem::exists((folder + "/" + subfolder).get())) {
+						std::system(("mkdir " + folder).get());
+						std::system(("mkdir " + folder + "\\" + subfolder).get());
+					}
+				#else
+					if (!std::filesystem::exists((folder + "/" + subfolder).get())) {
+						std::system(("mkdir -p " + folder + "/" + subfolder).c_str());
+					}
+				#endif
 				fileP.open(fullPath.get(), ios::binary | ios::out);
 				for (i = dataFs.begin(); i != dataFs.end(); i++) {
+					idAP =  i->dataF.getAeroPropertiesObj().id;
 					fileP << i->id << " " << i->dataF.getName() << " " << i->dataF.getMAC() << " ";
-					fileP << i->dataF.getL() << " " << i->dataF.getS() << " " << i->dataF.getAeroPropertiesObj().id <<"\n";
+					fileP << i->dataF.getL() << " " << i->dataF.getS() << " " << idAP <<"\n";
 				}
 			}
 			else if (format == html) {
 				String subfolder = "HTML";
-				String fullPath = folder + "/" + subfolder + "/" + file;
+				String fullPath = folder + "/" + subfolder + "/" + file + ".html";
 #ifdef _WIN32
-				std::system(("mkdir " + folder).get());
-				std::system(("mkdir " + folder + "\\" + subfolder).get());
+				if (!std::filesystem::exists((folder + "/" + subfolder).get())) {
+					std::system(("mkdir " + folder).get());
+					std::system(("mkdir " + folder + "\\" + subfolder).get());
+				}
 #else
-				std::system(("mkdir -p " + folder + "/" + subfolder).c_str());
+				if (!std::filesystem::exists((folder + "/" + subfolder).get())) {
+					std::system(("mkdir -p " + folder + "/" + subfolder).c_str());
+				}
 #endif
 				fileP.open(fullPath.get(), ios::binary | ios::out);
 				fileP << "<!DOCTYPE html><html lang = \"en\" ><head><meta charset = \"UTF-8\"><meta name = \"viewport\" content = \"width=device-width, initial-scale=1.0\"><title>Wing Base</title>";
@@ -41,8 +54,14 @@ namespace Aerodynamics {
 				fileP << "<table><tr><th>Wing ID</th><th>Wing Name</th><th>Mean Aerodynamic Chord(m)</th><th>Len(m)</th>";
 				fileP << "<th>Wing Area(sq m)</th><th>Aero Properties ID</th></tr>";
 				for (i = dataFs.begin(); i != dataFs.end(); i++) {
+					if (i->dataF.getAeroPropertiesObj().dataF.getVectorAK()->size()) {
+						idAP = i->dataF.getAeroPropertiesObj().id;
+					}
+					else {
+						idAP = -1;
+					}
 					fileP << "<tr><td>" << i->id << "</td><td>" << i->dataF.getName() << "</td><td>" << i->dataF.getMAC() << "</td><td>";
-					fileP << i->dataF.getL() << "</td><td>" << i->dataF.getS() << "</td><td>" << i->dataF.getAeroPropertiesObj().id <<"</td></tr>";
+					fileP << i->dataF.getL() << "</td><td>" << i->dataF.getS() << "</td><td>" <<idAP <<"</td></tr>";
 				}
 				fileP << "</table>";
 				fileP << "</body><html>";
@@ -63,20 +82,23 @@ namespace Aerodynamics {
 			unsigned int id;
 			string name;
 			double MAC,l, S;
-			unsigned int apId;
+			int apId;
 			fstream fileP;
-			fileP.open(file, ios::binary|ios::in);
+			std::string fileName = "WingBases/txt/" + (string)file;
+			fileP.open(fileName, ios::binary|ios::in);
 
 			if (!fileP) return *this;
 
 			dataFs.clear();
 			while (fileP >> id >> name >>MAC>> l >>S>> apId)
 			{
-				if (fileP.eof())break;
 				Wing w(name, MAC, l, S);
-				w.setAeroPropertiesID(apId, apb);
+				if (apId + 1) {
+					w.setAeroPropertiesID(apId, apb);
+				}
 				Object newObj(id, w);
 				dataFs.push_back(newObj);
+				this->idLast = id;
 			}
 			fileP.close();
 			return *this;

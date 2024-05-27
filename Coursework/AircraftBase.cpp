@@ -8,47 +8,71 @@ namespace Aerodynamics {
 			if (!(*this).size()) return false;
 			fstream fileP;
 			if (!fileP) {
-				throw exception("File not found");
+				return false;
 			}
 			String folder = "AircraftBases";
 			
-			
 			typename std::list<Object>::iterator i;
+			int idW,idAP;
 			if (format == txt) {
 				String subfolder = "txt";
-				String fullPath = folder + "/" + subfolder + "/" + file;
+				String fullPath = folder + "/" + subfolder + "/" + file + ".txt";
 				#ifdef _WIN32
-								std::system(("mkdir " + folder).get());
-								std::system(("mkdir " + folder + "\\" + subfolder).get());
+						if (!std::filesystem::exists((folder + "/" + subfolder).get())) {
+							std::system(("mkdir " + folder).get());
+							std::system(("mkdir " + folder + "\\" + subfolder).get());
+						}
 				#else
-								std::system(("mkdir -p " + folder + "/" + subfolder).c_str());
+						if (!std::filesystem::exists((folder + "/" + subfolder).get())) {
+							std::system(("mkdir -p " + folder + "/" + subfolder).c_str());
+						}
 				#endif
 				fileP.open(fullPath.get(), ios::binary | ios::out);
 				for (i = dataFs.begin(); i != dataFs.end(); i++) {
+					idW = i->dataF.getWingObject().id;
+					
+					idAP =  i->dataF.getAPObject().id;
+					
 					fileP << i->id<<" " << i->dataF.getName() << " " << i->dataF.getD() << " " ;
 					fileP << i->dataF.getX() << " " << i->dataF.getY() << " " << i->dataF.getG() << " " << i->dataF.getAlignment() << " ";
-					fileP << i->dataF.getL() << " " << i->dataF.getWingObject().id << " " << i->dataF.getAPObject().id << "\n";
+					fileP << i->dataF.getL()  << " " << idW << " " << idAP << "\n";
 				}
 			}
 			else if (format == html) {
 				String subfolder = "HTML";
-				String fullPath = folder + "/" + subfolder + "/" + file;
+				String fullPath = folder + "/" + subfolder + "/" + file + ".html";
 				#ifdef _WIN32
-								std::system(("mkdir " + folder).get());
-								std::system(("mkdir " + folder + "\\" + subfolder).get());
+						if (!std::filesystem::exists((folder + "/" + subfolder).get())) {
+							std::system(("mkdir " + folder).get());
+							std::system(("mkdir " + folder + "\\" + subfolder).get());
+						}
 				#else
-								std::system(("mkdir -p " + folder + "/" + subfolder).c_str());
+						if (!std::filesystem::exists((folder + "/" + subfolder).get())) {
+							std::system(("mkdir -p " + folder + "/" + subfolder).c_str());
+						}
 				#endif
 				fileP.open(fullPath.get(), ios::binary | ios::out);
 				fileP << "<!DOCTYPE html><html lang = \"en\" ><head><meta charset = \"UTF-8\"><meta name = \"viewport\" content = \"width=device-width, initial-scale=1.0\"><title>Aircraft Base</title>";
 				fileP << "<style>table {font - family: Arial, sans - serif;border - collapse: collapse;width: 100 %;}th, td{ border: 1px solid #dddddd;";
 				fileP << "text - align: left;padding: 8px;}th{background - color: #f2f2f2;}tr:nth - child(even) {background - color: #f2f2f2;}</style></head><body>";
 				fileP << "<table><tr><th>Aircraft ID</th><th>Aircraft Name</th><th>Traction force(H)</th><th>Head resistance(H)</th>"; 
-				fileP << "<th>Lifting force(H)</th><th>Weight(kg)</th><th>Alignment</th><th>Len(m)</th><th>min Speed(m/s)</th><th>Wing ID</th><th>Aero Properties ID</th></tr>"; 
+				fileP << "<th>Lifting force(H)</th><th>Weight(kg)</th><th>Alignment</th><th>Len(m)</th><th>Wing ID</th><th>Aero Properties ID</th></tr>"; 
 				for (i = dataFs.begin(); i != dataFs.end(); i++) {
+					if (i->dataF.getWingObject().dataF.getName() != "") {
+						idW = i->dataF.getWingObject().id;
+					}
+					else {
+						idW = -1;
+					}
+					if (i->dataF.getAPObject().dataF.getVectorAK()->size()) {
+						idAP = i->dataF.getAPObject().id;
+					}
+					else {
+						idAP = -1;
+					}
 					fileP <<"<tr><td>"<< i->id << "</td><td>" << i->dataF.getName() <<  "</td><td>" << i->dataF.getD() << "</td><td>";
 					fileP << i->dataF.getX() <<  "</td><td>" << i->dataF.getY() <<  "</td><td>" << i->dataF.getG() <<  "</td><td>" << i->dataF.getAlignment() << "</td><td>";
-					fileP << i->dataF.getL() <<  "</td><td>" << i->dataF.getVMin() << "</td><td>" << i->dataF.getWingObject().id <<  "</td><td>" << i->dataF.getAPObject().id << "</td></tr>";
+					fileP << i->dataF.getL() <<  "</td><td>" << idW <<  "</td><td>" << idAP << "</td></tr>";
 				}
 				fileP << "</table>";
 				fileP << "</body><html>";
@@ -68,26 +92,33 @@ namespace Aerodynamics {
 		{
 			unsigned int id;
 			string name;
-			double D, X, Y, G,x, l, vMin;
-			unsigned int wingId, apId;
+			double D, X, Y, G,x, l;
+			int wingId, apId;
 			fstream fileP;
-			fileP.open(file, ios::binary|ios::in);
+			std::string fileName = "AircraftBases/txt/" + (string)file;
+			fileP.open(fileName, ios::binary | ios::in);
 
-			if (!fileP) return *this;
+			if (!fileP) {
+				std::cerr << "Не удалось открыть файл для чтения: " << file << std::endl;
+				return *this;
+			}
 
 			dataFs.clear();
-			while (fileP >> id >> name >> D >> X >> Y >> G>>x >> l >> vMin >> wingId >> apId )
+			while (fileP >> id >> name >> D >> X >> Y >> G >> x >> l >> wingId >> apId)
 			{
-				if (fileP.eof())break;
-				Aircraft a(name, l,D,X,Y,G);
+				Aircraft a(name, l, D, X, Y, G);
 				a.setAlignment(x);
-				a.setVMin(vMin);
-				a.setWingID(wingId,wb);
-				a.setAeroPropertiesID(apId,apb);
+				if (wingId + 1) {
+					a.setWingID(wingId, wb);
+				}
+				if (apId + 1) {
+					a.setAeroPropertiesID(apId, apb);
+				}
 				Object newObj(id, a);
-				dataFs.push_back(newObj);
+				dataFs.push_back(newObj);	
 			}
 			fileP.close();
+			
 			return *this;
 		}
 

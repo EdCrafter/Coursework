@@ -1,5 +1,7 @@
 #include "AeroPropertiesBase.h"
 #include "AeroProperties.h"
+#include <string>
+#include <sstream>
 namespace Aerodynamics {
 	namespace Data {
 
@@ -8,32 +10,49 @@ namespace Aerodynamics {
 		{
 			if (!(*this).size()) return false;
 			fstream fileP;
-			fileP.open(file, ios::binary|ios::out);
-			typename std::list<Object>::iterator i;
+			if (!fileP) {
+				return false;
+			}
 			String folder = "AeroPropertiesBases";
+
+
+			typename std::list<Object>::iterator i;
 			if (format == txt) {
 				String subfolder = "txt";
-				String fullPath = folder + "/" + subfolder + "/" + file;
-#ifdef _WIN32
-				std::system(("mkdir " + folder).get());
-				std::system(("mkdir " + folder + "\\" + subfolder).get());
-#else
-				std::system(("mkdir -p " + folder + "/" + subfolder).c_str());
-#endif
+				String fullPath = folder + "/" + subfolder + "/" + file + ".txt";
+				#ifdef _WIN32
+								if (!std::filesystem::exists((folder + "/" + subfolder).get())) {
+									std::system(("mkdir " + folder).get());
+									std::system(("mkdir " + folder + "\\" + subfolder).get());
+								}
+				#else
+								if (!std::filesystem::exists((folder + "/" + subfolder).get())) {
+									std::system(("mkdir -p " + folder + "/" + subfolder).c_str());
+								}
+				#endif
 				fileP.open(fullPath.get(), ios::binary | ios::out);
 				for (i = dataFs.begin(); i != dataFs.end(); i++) {
-					fileP << i->id << " " << i->dataF.getVectorAK()<< "\n";
+					fileP << i->id << "\n";
+					auto end = i->dataF.getVectorAK()->end();
+					for (auto j = i->dataF.getVectorAK()->begin(); j != end; j++) {
+						fileP << j->Cx << " " << j->Cy << " " << j->a << "\n";
+					}
+					fileP<< "\n";
 				}
 			}
 			else if (format == html) {
 				String subfolder = "HTML";
-				String fullPath = folder + "/" + subfolder + "/" + file;
-#ifdef _WIN32
-				std::system(("mkdir " + folder).get());
-				std::system(("mkdir " + folder + "\\" + subfolder).get());
-#else
-				std::system(("mkdir -p " + folder + "/" + subfolder).c_str());
-#endif
+				String fullPath = folder + "/" + subfolder + "/" + file + ".html";
+				#ifdef _WIN32
+						if (!std::filesystem::exists((folder + "/" + subfolder).get())) {
+							std::system(("mkdir " + folder).get());
+							std::system(("mkdir " + folder + "\\" + subfolder).get());
+						}
+				#else
+						if (!std::filesystem::exists((folder + "/" + subfolder).get())) {
+							std::system(("mkdir -p " + folder + "/" + subfolder).c_str());
+						}
+				#endif
 				fileP.open(fullPath.get(), ios::binary | ios::out);
 				fileP << "<!DOCTYPE html><html lang = \"en\" ><head><meta charset = \"UTF-8\"><meta name = \"viewport\" content = \"width=device-width, initial-scale=1.0\"><title>Aircraft Base</title>";
 				fileP << "<style>table {font - family: Arial, sans - serif;border - collapse: collapse;width: 100 %;}th, td{ border: 1px solid #dddddd;";
@@ -59,25 +78,33 @@ namespace Aerodynamics {
 		AeroPropertiesBase& AeroPropertiesBase::read(char* file)
 		{
 			unsigned int id;
-			int addrV;
-
+			double Cx,Cy,ang;
+			string line;
 			fstream fileP;
-			fileP.open(file, ios::binary|ios::in);
+			std::string fileName = "AeroPropertiesBases/txt/" + (string)file;
+			fileP.open(fileName, ios::binary|ios::in);
 
 			if (!fileP) return *this;
 
 			dataFs.clear();
-			while (fileP >> id >> addrV)
-			{
-				if (fileP.eof())break;
+			while (std::getline(fileP, line)) {
+				if (line.empty()) {
+					continue; // Пропускаем пустые строки
+				}
+				id = std::stoi(line); // Читаем ID
 				Aerodynamics::Analytics::AeroProperties a;
-				vector<Aerodynamics::Analytics::AeroQuality>* i = (vector<Aerodynamics::Analytics::AeroQuality>*)addrV;
-				a.set(*i);
-			
+				while (std::getline(fileP, line) && !line.empty()) {
+					std::istringstream iss(line);
+					iss >> Cx >> Cy >> ang;
+					a.add(Cx,Cy,ang);
+				}
 				Object newObj(id, a);
 				dataFs.push_back(newObj);
+				this->idLast = id;
 			}
+
 			fileP.close();
+			
 			return *this;
 		}
 
