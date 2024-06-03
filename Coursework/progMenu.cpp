@@ -22,9 +22,6 @@ progMenu& progMenu::start()
 	myInterface.addItem("          __ | __", [&myInterface]() {myInterface.Select(); });
 	myInterface.addItem("    --@--@--(_)--@--@-- ", [&myInterface]() {myInterface.Select(); });
 	myInterface.addItem("      `` ``      `` `` ", [&myInterface]() {myInterface.Select(); });
-		
-
-
 	myInterface.Select();
 	return *this;
 }
@@ -1015,9 +1012,9 @@ progMenu& Aerodynamics::UI::progMenu::aircraftMenu(Aircraft& airc,unsigned int j
 			wS = 0;
 		}
 
-		FunctionMenu centerMenu("ÌÅÍŞ ÎÁ×ÈÑËÅÍÍß Y", 1);
-		centerMenu.SetHeight(10).SetWidth(35).HCenter().VCenter();
-		centerMenu.addItem("Ïîêàçàòè ìiíiìàëüíó øâèäêiñò", [this, &airc, &centerMenu]() {
+		FunctionMenu centerMenu("ÌÅÍŞ ÎÁ×ÈÑËÅÍÍß ÌIÍIÌÀËÜÍÎ¯ ØÂÈÄÊÎÑÒI", 1);
+		centerMenu.SetHeight(10).SetWidth(45).HCenter().VCenter();
+		centerMenu.addItem("Ïîêàçàòè ìiíiìàëüíó øâèäêiñòü", [this, &airc, &centerMenu]() {
 			funConsole::clearScr();
 			Window win;
 			win.SetWidth(40).SetHeight(3).VCenter().HCenter();

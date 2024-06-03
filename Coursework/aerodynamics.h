@@ -5,7 +5,6 @@ using namespace std;
 #define AERODYNAMICS_HPP
 
 namespace Aerodynamics {
-    
     namespace UI {}
     namespace Analytics {
         struct AeroQuality
@@ -63,7 +62,6 @@ namespace Aerodynamics {
     namespace Data {
         
     }
-    
 }
 
 #endif // AERODYNAMICS_HPP
